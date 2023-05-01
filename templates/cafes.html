@@ -1,0 +1,66 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block styles %}
+{{ super() }}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+
+
+{% block title %}All Cafes{% endblock %}
+
+
+{% block content %}
+
+<div class="container cafes">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>All Cafes</h1>
+
+	  <table class="table">
+
+	  {% for row in cafes %}
+	  {% if row %}
+	  <tr>
+		  	{% for item in row %}
+				{% if item[0:4] == "http" %}
+				<td><a href="{{ item }}">Maps Link</a></td>
+				{% else %}
+				<td>{{ item }}</td>
+				{% endif %}
+			{% endfor %}
+			{% if loop.index != 0 %}
+			<td class="delete-button">
+			  <form action="{{ url_for('delete_cafe') }}" method="POST">
+				<input type="hidden" name="cafe_name" value="{{ row[0] }}" />
+				<button type="submit" class="btn btn-danger">Delete</button>
+			  </form>
+			</td>
+			{% endif %}
+	  </tr>
+	  {% endif %}
+	  {% endfor %}
+  	  </table>
+
+		<a href="{{ url_for('add_cafe') }}" class="btn btn-primary" role="button">Add New Cafe</a>
+
+      <p><a href="{{ url_for('home') }}">Return to index page</a></p>
+
+    </div>
+  </div>
+</div>
+
+<script>
+	// Select all delete buttons
+	const deleteButtons = document.querySelectorAll('.delete-button');
+  
+	// Loop through each delete button
+	deleteButtons.forEach((button, index) => {
+	  // If this is the first row, hide the delete button
+	  if (index === 0) {
+		button.style.display = 'none';
+	  }
+	});
+</script>
+
+{% endblock %}
